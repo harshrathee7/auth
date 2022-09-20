@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+</head>
+<body>
+    <div class="authenticated">
+<h1>Welcome <p class="user_email"></p></h1>
+<button class="logout">Logout</button>
+    </div>
+
+
+
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+    integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+    <script>
+
+ function getUser(){
+    axios.get('http://localhost:5000/auth/user',{
+                    headers:{
+                        'Authorization':localStorage.getItem('JWT_TOKEN')
+                    }
+                }).then((d)=>{
+                    console.log(d);
+                    const {email} = d.data;
+                    document.querySelector('.user_email').textContent = email;
+
+                }).catch((e)=>{
+                    console.log(e)
+                })
+        }
+
+        
+        function checkAuth(){
+            const token = localStorage.getItem("JWT_TOKEN");
+            if(token){
+                
+
+                getUser();
+                return;
+                
+            }
+            window.location.href="/login"
+
+           
+           
+        }
+
+
+
+        
+        
+
+        window.onload = checkAuth();
+
+
+        function logout(){
+            localStorage.removeItem('JWT_TOKEN');
+            window.location.href="/login";
+        }
+
+
+        document.querySelector('.logout').addEventListener('click',logout)
+    </script>
+</body>
+</html>

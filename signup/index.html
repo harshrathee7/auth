@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+  </head>
+  <body>
+    <form>
+      <input type="email" placeholder="Enter Email Address" name="email" />
+      <input type="password" placeholder="Enter Password" name="password" />
+      <input type="submit" value="Create account" />
+    </form>
+
+    <a href="/login">Already have account?Login</a>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+      integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = form["email"].value;
+        const password = form["password"].value;
+        axios
+          .post("http://localhost:5000/auth/create", {
+            email,
+            password,
+          })
+          .then((res) => {
+            console.log(res);
+
+            const { message } = res.data;
+            alert(message);
+            window.location.href = "/login"
+          })
+          .catch((e) => {
+            console.log(e);
+            if (e.response && e.response.data) {
+              console.log(e.response.data);
+              const { error, message } = e.response.data;
+              if (error) {
+                alert(message);
+                return;
+              }
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
